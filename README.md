@@ -21,6 +21,55 @@ The application is configured for zero-config local development using SQLite.
     npm run test:e2e
     ```
 
+## 🔧 Quick Testing (curl)
+
+### 1. Create Deployment
+
+```bash
+curl -X POST http://localhost:3000/deployments \
+  -H "Content-Type: application/json" \
+  -d '{"model":"model-a"}'
+```
+
+*Copy `deployment_id` from response.*
+
+---
+
+### 2. Check Deployment (after ~10 seconds)
+
+```bash
+curl http://localhost:3000/deployments/<deployment_id>
+```
+
+*Copy `api_key` when status becomes `ready`.*
+
+---
+
+### 3. Call Completion API
+
+```bash
+curl -X POST http://localhost:3000/v1/<deployment_id>/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <api_key>" \
+  -d '{"prompt":"Hello world"}'
+```
+
+---
+
+### 4. Check Usage
+
+```bash
+curl "http://localhost:3000/usage?api_key=<api_key>&group_by=day"
+```
+
+---
+
+### 5. Delete Deployment
+
+```bash
+curl -X DELETE http://localhost:3000/deployments/<deployment_id>
+```
+
 ---
 
 ## 📊 2. Data Model & Architecture
